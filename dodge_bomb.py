@@ -21,6 +21,21 @@ def main():
     bb_rct = bb_img.get_rect()
     bb_rct.center = (random.randint(0,1100),random.randint(0,650)) 
 
+    def check_bound(obj_rct: pg.Rect) -> tuple[bool, bool]:
+        """
+        引数：こうかとんRectかばくだんRect
+        戻り値：タプル（横方向判定結果，縦方向判定結果）
+        画面内ならTrue，画面外ならFalse
+        """
+        yoko, tate = True, True
+        if obj_rct.left < 0 or WIDTH < obj_rct.right: # 横方向判定
+            yoko = False
+        if obj_rct.top < 0 or HEIGHT < obj_rct.bottom: # 縦方向判定
+            tate = False
+        return yoko, tate
+    
+    bb_mv = [5,5]
+
     clock = pg.time.Clock()
     tmr = 0
     while True:
@@ -40,12 +55,19 @@ def main():
 
             
         kk_rct.move_ip(sum_mv)
+        yoko,tate = check_bound(kk_rct)
+        if not yoko or not tate:
+            kk_rct.center = (300,200)
+        yoko,tate = check_bound(bb_rct)
+        if not yoko:
+            bb_mv[0] *= -1
+        if not tate:
+            bb_mv[1] *= -1
         screen.blit(kk_img, kk_rct)
-        bb_rct.move_ip(5,5)
+        bb_rct.move_ip(bb_mv)
         pg.display.update()
         tmr += 1
         clock.tick(50)
-
 
 if __name__ == "__main__":
     pg.init()
