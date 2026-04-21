@@ -63,6 +63,8 @@ def main():
             bb_mv[0] *= -1
         if not tate:
             bb_mv[1] *= -1
+        if kk_rct.colliderect(bb_rct):
+            return
         screen.blit(kk_img, kk_rct)
         bb_rct.move_ip(bb_mv)
         pg.display.update()
