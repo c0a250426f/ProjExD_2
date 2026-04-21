@@ -64,8 +64,25 @@ def main():
         pg.display.update()
         time.sleep(5)
 
+    def calc_orientation(org: pg.Rect, dst: pg.Rect,current_xy: tuple[float, float]) -> tuple[float, float]:
+
+        dx = dst.centerx - org.centerx
+        dy = dst.centery - org.centery
+        dist = (dx**2 + dy**2) ** 0.5
+        if dist < 300:
+            return current_xy
+        if dist != 0:
+            scale = (50 ** 0.5) / dist
+            vx = dx * scale
+            vy = dy * scale
+        else:
+            vx, vy = 0, 0
+        return (vx, vy)
+
+
     clock = pg.time.Clock()
     tmr = 0
+    vx, vy = 5, 5
 
     while True:
         for event in pg.event.get():
@@ -104,6 +121,9 @@ def main():
 
         screen.blit(bb_img, bb_rct)
         screen.blit(kk_img, kk_rct)
+
+        vx, vy = calc_orientation(bb_rct, kk_rct, (vx, vy))
+        bb_rct.move_ip(vx, vy)
 
         pg.display.update()
         tmr += 1
